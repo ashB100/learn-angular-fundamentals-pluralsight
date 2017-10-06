@@ -21,9 +21,4 @@ import { Component, Input } from '@angular/core';
 })
 export class EventThumbNailComponent {
     @Input() event:any;
-    someProperty:string = "some value";
-
-    logFoo() {
-        console.log('foo');
-    }
 }
