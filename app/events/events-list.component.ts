@@ -19,7 +19,7 @@ import { ToastrService } from '../common/toastr.service';
         </div>
     `
 })
-export class EventListComponent implements OnInit {
+export class EventsListComponent implements OnInit {
     events: any[];
 
     constructor(private eventService: EventService, private toastr: ToastrService) {
