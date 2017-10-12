@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ISession } from '../shared/event.model';
+import { restrictedWords } from '../shared/restricted-words.validator';
 
 @Component({
+    selector: 'create-session',
     templateUrl: "app/events/event-details/create-session.component.html",
     styles: [`
         em { 
@@ -19,6 +21,9 @@ import { ISession } from '../shared/event.model';
   `]
 })
 export class CreateSessionComponent implements OnInit {
+    @Output() saveNewSession = new EventEmitter();
+    @Output() cancelAddSession = new EventEmitter();
+
     newSessionForm: FormGroup;
     name: FormControl;
     presenter: FormControl;
@@ -31,7 +36,7 @@ export class CreateSessionComponent implements OnInit {
         this.presenter = new FormControl('', Validators.required);
         this.duration = new FormControl('', Validators.required);
         this.level = new FormControl('', Validators.required);
-        this.abstract = new FormControl('', [Validators.required, Validators.maxLength(400), this.restrictedWords(['foo', 'bar'])]);
+        this.abstract = new FormControl('', [Validators.required, Validators.maxLength(400), restrictedWords(['foo', 'bar'])]);
     
         this.newSessionForm = new FormGroup({
             name: this.name,
@@ -41,24 +46,6 @@ export class CreateSessionComponent implements OnInit {
             abstract: this.abstract
         })
     }
-
-    private restrictedWords(words) {
-        return (control:FormControl):{[key:string]:any} => {
-            if (!words) return null;
-            
-            let invalidWords = words
-                .map(word => control.value.includes(word) ? word : null)
-                .filter(word => word != null);
-
-            let error = {
-                'restrictedWords': invalidWords.join(', ')  
-            };
-
-            return invalidWords && invalidWords.length > 0 ? error : null; 
-        };
-    }
-
-    
 
     saveSession(formValues) {
         let session:ISession = {
@@ -71,6 +58,10 @@ export class CreateSessionComponent implements OnInit {
             voters: []
         }
         
-        console.log(session);
+        this.saveNewSession.emit(session);
+    }
+
+    cancel() {
+        this.cancelAddSession.emit();
     }
 }
