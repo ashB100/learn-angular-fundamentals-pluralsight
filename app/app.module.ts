@@ -12,6 +12,7 @@ import { NavBarComponent } from './nav/navbar.component';
 import { Error404Component } from './errors/404.component';
 import { CreateSessionComponent } from './events/event-details/create-session.component';
 import { SessionListComponent } from './events/event-details/session-list.component'
+import { CollapsibleWellComponent } from './common/collapsible-well.component';
 
 import { EventListResolver } from './events/events-list-resolver.service';
 import { EventService } from './events/shared/event.service';
@@ -37,7 +38,8 @@ import { appRoutes } from './routes';
         NavBarComponent,
         Error404Component,
         CreateSessionComponent,
-        SessionListComponent
+        SessionListComponent,
+        CollapsibleWellComponent
     ],
     providers: [
         EventListResolver,
