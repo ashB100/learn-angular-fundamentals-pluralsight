@@ -18,11 +18,14 @@ import { DurationPipe } from './events/shared/duration.pipe';
 
 import { EventListResolver } from './events/events-list-resolver.service';
 import { EventService } from './events/shared/event.service';
-import { ToastrService } from './common/toastr.service';
+import { TOASTR_TOKEN, Toastr } from './common/toastr.service';
 import { AuthService } from './user/auth.service';
 
 import { EventRouteActivator } from './events/event-details/event-route-activator.service';
 import { appRoutes } from './routes';
+
+// Letting typescript know there's a global toastr object
+declare let toastr: Toastr;
 
 @NgModule({
     imports: [ 
@@ -47,7 +50,10 @@ import { appRoutes } from './routes';
     providers: [
         EventListResolver,
         EventService,
-        ToastrService,
+        {
+            provide: TOASTR_TOKEN,
+            useValue: toastr
+        },
         EventRouteActivator,
         AuthService,
         {
