@@ -12,13 +12,18 @@ import { NavBarComponent } from './nav/navbar.component';
 import { Error404Component } from './errors/404.component';
 import { CreateSessionComponent } from './events/event-details/create-session.component';
 import { SessionListComponent } from './events/event-details/session-list.component'
-import { CollapsibleWellComponent } from './common/collapsible-well.component';
+
+import { CollapsibleWellComponent, 
+    TOASTR_TOKEN, 
+    Toastr, 
+    JQ_TOKEN,
+    SimpleModalComponent,
+    ModalTriggerDirective } from './common/index';
 
 import { DurationPipe } from './events/shared/duration.pipe';
 
 import { EventListResolver } from './events/events-list-resolver.service';
 import { EventService } from './events/shared/event.service';
-import { TOASTR_TOKEN, Toastr } from './common/toastr.service';
 import { AuthService } from './user/auth.service';
 
 import { EventRouteActivator } from './events/event-details/event-route-activator.service';
@@ -26,6 +31,7 @@ import { appRoutes } from './routes';
 
 // Letting typescript know there's a global toastr object
 declare let toastr: Toastr;
+declare let jQuery: Object;
 
 @NgModule({
     imports: [ 
@@ -45,7 +51,9 @@ declare let toastr: Toastr;
         CreateSessionComponent,
         SessionListComponent,
         CollapsibleWellComponent,
-        DurationPipe
+        DurationPipe,
+        SimpleModalComponent,
+        ModalTriggerDirective
     ],
     providers: [
         EventListResolver,
@@ -53,6 +61,10 @@ declare let toastr: Toastr;
         {
             provide: TOASTR_TOKEN,
             useValue: toastr
+        },
+        {
+            provide: JQ_TOKEN,
+            useValue: jQuery
         },
         EventRouteActivator,
         AuthService,
