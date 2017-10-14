@@ -32,6 +32,7 @@ import { JQ_TOKEN } from './jQuery.service';
 export class SimpleModalComponent {
     @Input() title: string;
     @Input() elementId: string;
+    @Input() closeOnBodyClick: string;
     @ViewChild('modalContainer') containerEl: ElementRef;
 
     constructor(@Inject(JQ_TOKEN) private $: any) {}
@@ -39,6 +40,8 @@ export class SimpleModalComponent {
     closeModal() {
         // We get the underlying DOM element that containerEl points 
         // to which is found by looking up the ref for modalContainer.
-        this.$(this.containerEl.nativeElement).modal('hide');
+        if (this.closeOnBodyClick.toLocaleLowerCase() === "true") {
+            this.$(this.containerEl.nativeElement).modal('hide');
+        }   
     }
 }
