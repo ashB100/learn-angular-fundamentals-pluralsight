@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
 import { EventService } from '../shared/event.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params, ParamMap } from '@angular/router';
 import { IEvent, ISession } from '../shared/event.model';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     templateUrl: '/app/events/event-details/event-details.component.html',
@@ -22,7 +23,20 @@ export class EventDetailsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.event = this.eventService.getEvent(+this.route.snapshot.params['id']);
+        // params is depracated
+        /* this.route.params.forEach((params: Params) => {
+            this.event = this.eventService.getEvent(+params['id'])
+        }); */
+
+        this.route.paramMap
+            .switchMap((params: ParamMap) => {
+                return Observable.of(this.eventService.getEvent(+params.get('id')));
+            }).subscribe(event => {
+                this.event = event;
+            });
+
+        // snapshot only takes the snapshot of the initial route parameters
+        //this.event = this.eventService.getEvent(+this.route.snapshot.params['id']);
     }
 
     addSession() {
