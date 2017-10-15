@@ -16,9 +16,12 @@ import { IEvent } from './shared/event.model';
                 <span *ngSwitchDefault>(Normal Start)</span>
             </div>
             <div>Price: {{event.price | currency:'USD':true}}</div>
-            <div>
+            <div *ngIf="event.location?.address">
                 <span>Location: {{event.location.address}}</span>
                 <span class="pad-left">{{event.location.city}}, {{event.location.country}}</span>
+            </div>
+            <div *ngIf="event?.onlineUrl">
+                <span>Online URL: {{event.onlineUrl}}</span>
             </div>
         </div>
     `,

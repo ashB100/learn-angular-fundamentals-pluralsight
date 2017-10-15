@@ -13,6 +13,7 @@ import { Error404Component } from './errors/404.component';
 import { CreateSessionComponent } from './events/event-details/create-session.component';
 import { SessionListComponent } from './events/event-details/session-list.component'
 import { UpvoteComponent } from './events/event-details/upvote.component';
+import { LocationValidator } from './events/location-validator.directive';
 
 import { CollapsibleWellComponent, 
     TOASTR_TOKEN, 
@@ -56,7 +57,8 @@ declare let jQuery: Object;
         CollapsibleWellComponent,
         DurationPipe,
         SimpleModalComponent,
-        ModalTriggerDirective
+        ModalTriggerDirective,
+        LocationValidator
     ],
     providers: [
         EventListResolver,
