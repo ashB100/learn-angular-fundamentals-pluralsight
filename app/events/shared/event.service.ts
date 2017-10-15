@@ -1,18 +1,24 @@
 import { Injectable, EventEmitter } from '@angular/core';
+import { Http, Response } from '@angular/http';
 import { Subject, Observable } from 'rxjs/RX';
 import { IEvent, ISession } from './event.model';
 
+
 @Injectable()
 export class EventService {
-    getEvents():Subject<IEvent[]> {
-        let subject = new Subject<IEvent[]>();
+    constructor(private http: Http) {}
 
-        setTimeout(() => {
-          subject.next(EVENTS);
-          subject.complete();
-        }, 100);
-
-        return subject;
+    getEvents(): Observable<IEvent[]> {
+      // What gets returned is an observable
+      // of response. We want an observable of array
+      // of events. 
+      return this.http.get("/api/events")
+        .map((response: Response) => {
+          // assuming that response is a json object 
+          // type it to an array of IEvent
+          return <IEvent[]>response.json()
+        })
+        .catch(this.handleError);
     }
 
     getEvent(id:number):IEvent {
@@ -56,6 +62,10 @@ export class EventService {
         emitter.emit(results);
       }, 100);
       return emitter;
+    }
+
+    private handleError(error: Response) {
+      return Observable.throw(error.statusText);
     }
 }
 
