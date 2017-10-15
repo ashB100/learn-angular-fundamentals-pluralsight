@@ -8,7 +8,6 @@ export class EventRouteActivator implements CanActivate {
 
     }
     
-
     canActivate(route:ActivatedRouteSnapshot) {
         const eventExists = !!this.eventService.getEvent(+route.params['id']);
         
@@ -19,3 +18,8 @@ export class EventRouteActivator implements CanActivate {
         return eventExists;
     }
 }
+
+// The EventRouteActivator is not used any more 
+// for 'events/:id' route, instead the resolve 
+// is used to prefatch event data.
+// I'm just leaving this code here for reference.

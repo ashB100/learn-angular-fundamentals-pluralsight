@@ -28,15 +28,28 @@ export class EventDetailsComponent implements OnInit {
             this.event = this.eventService.getEvent(+params['id'])
         }); */
 
-        this.route.paramMap
+        // We don't need this now as the resolver prefetches our event data
+        /*this.route.paramMap
             .switchMap((params: ParamMap) => {
-                return Observable.of(this.eventService.getEvent(+params.get('id')));
-            }).subscribe(event => {
+                return this.eventService.getEvent(+params.get('id'));
+            }).subscribe((event:IEvent) => {
                 this.event = event;
-            });
+                this.addMode = false;
+            }); */
 
         // snapshot only takes the snapshot of the initial route parameters
         //this.event = this.eventService.getEvent(+this.route.snapshot.params['id']);
+
+        /*this.route.data.forEach(data => {
+            this.event = data['event'];
+            this.addMode = false;
+        }) */
+
+        this.route.data
+            .subscribe(data => {
+                this.event = data['event'];
+                this.addMode = false;
+        });
     }
 
     addSession() {

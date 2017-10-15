@@ -26,6 +26,7 @@ import { CollapsibleWellComponent,
 import { DurationPipe } from './events/shared/duration.pipe';
 
 import { EventListResolver } from './events/events-list-resolver.service';
+import { EventResolver } from './events/event-resolver';
 import { EventService } from './events/shared/event.service';
 import { AuthService } from './user/auth.service';
 import { VoterService } from './events/event-details/voter.service';
@@ -79,7 +80,8 @@ declare let jQuery: Object;
             provide: 'canDeactivateCreateEvent',
             useValue: checkDirtyState
         },
-        VoterService
+        VoterService,
+        EventResolver
     ],
     bootstrap: [ EventsAppComponent ]
 })
