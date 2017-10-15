@@ -1,5 +1,7 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ISession } from '../shared/event.model';
+import { AuthService } from '../../user/auth.service';
+import { VoterService } from './voter.service';
 
 @Component({
     selector: "session-list",
@@ -11,6 +13,7 @@ export class SessionListComponent implements OnChanges {
     @Input() sortBy: string;
     visibleSessions: ISession[] = [];
 
+    constructor(private auth: AuthService, private voterService: VoterService) {}
     // ngOnChanges gets called everytime an input gets a new value
     // ngOnChanges can be called before any of the data is set
     // so we want to check if sessions is set first 
@@ -25,7 +28,7 @@ export class SessionListComponent implements OnChanges {
     filterSessions(filter) {
         if (filter === 'all') {
             this.visibleSessions = this.sessions.slice(0);
-        } 
+        }
         else {
             this.visibleSessions = this.sessions.filter(session => {
                 return session.level.toLocaleLowerCase() === filter;
@@ -40,6 +43,25 @@ export class SessionListComponent implements OnChanges {
         else if (sortBy === 'votes'){
             this.visibleSessions.sort(sortByVotesDesc)
         }
+    }
+
+     toggleVote(session :ISession) {
+        const username = this.auth.currentUser.userName;
+
+        if (this.userHasVoted(session)) {
+            this.voterService.deleteVoter(session, username);
+        }
+        else {
+            this.voterService.addVoter(session, username);
+        }
+
+        if (this.sortBy === 'votes') {
+            this.visibleSessions.sort(sortByVotesDesc);
+        }
+    }
+
+    userHasVoted(session: ISession) {
+        return this.voterService.userHasVoted(session, this.auth.currentUser.userName);
     }
 }
 

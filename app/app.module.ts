@@ -12,6 +12,7 @@ import { NavBarComponent } from './nav/navbar.component';
 import { Error404Component } from './errors/404.component';
 import { CreateSessionComponent } from './events/event-details/create-session.component';
 import { SessionListComponent } from './events/event-details/session-list.component'
+import { UpvoteComponent } from './events/event-details/upvote.component';
 
 import { CollapsibleWellComponent, 
     TOASTR_TOKEN, 
@@ -25,6 +26,7 @@ import { DurationPipe } from './events/shared/duration.pipe';
 import { EventListResolver } from './events/events-list-resolver.service';
 import { EventService } from './events/shared/event.service';
 import { AuthService } from './user/auth.service';
+import { VoterService } from './events/event-details/voter.service';
 
 import { EventRouteActivator } from './events/event-details/event-route-activator.service';
 import { appRoutes } from './routes';
@@ -45,6 +47,7 @@ declare let jQuery: Object;
         EventsListComponent,
         EventThumbNailComponent,
         EventDetailsComponent,
+        UpvoteComponent,
         CreateEventComponent,
         NavBarComponent,
         Error404Component,
@@ -71,7 +74,8 @@ declare let jQuery: Object;
         {
             provide: 'canDeactivateCreateEvent',
             useValue: checkDirtyState
-        }
+        },
+        VoterService
     ],
     bootstrap: [ EventsAppComponent ]
 })
