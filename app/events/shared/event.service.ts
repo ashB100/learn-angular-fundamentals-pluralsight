@@ -1,5 +1,5 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Subject, Observable } from 'rxjs/RX';
 import { IEvent, ISession } from './event.model';
 
@@ -29,22 +29,58 @@ export class EventService {
         .catch(this.handleError);
     }
 
-    saveEvent(event) {
-      event.id = 999;
-      event.session = [];
-      EVENTS.push(event);
+    saveEvent(event): Observable<IEvent> {
+      // Set the content type to json so the server
+      // sees it's JSON that's coming in and not 
+      // some other type of data.  
+      let headers = new Headers({'Content-Type':'application/json'});
+
+      // In order to get that header on our request
+      // we have to create a request option
+      let options = new RequestOptions({headers: headers});
+
+      // In a recent version of Angular stringifying your data
+      // is no longer required.
+      // You can pass in the JavaScript object you
+      // want to send and it will automatically be 
+      // stringified for you.
+      return this.http.post('/api/events', JSON.stringify(event), options)
+        .map((response: Response) => {
+          return response.json();
+        })
+        .catch(this.handleError);
     }
 
+    // Typically you would use a put request in order
+    // to update an event. Our update is a bit weird 
+    // since we're not actually updating the event. Instead
+    // we're adding new sessions to the event. 
+    // In any case the server itself has been written
+    // to be smart. This /api/events is a smart 
+    // end point. In that if the event its given has an id
+    // it knows that it's updating! If it doesn't have and 
+    // id it knows its creating the event. Since our endpoint
+    // works that way, we don't need a separate method for 
+    // whether we're updating an event or creating an event.
+    // We can actually remove our updateEvent method.
+    // and in event-details.component where we call saveNewSession()
+    // instead of calling eventService.updateEvent call 
+    // eventServie.saveEvent(event).subscribe() to make the 
+    // call happen. 
     updateEvent(event) {
       let index = EVENTS.findIndex(x => x.id = event.id);
 
       EVENTS[index] = event;
     }
 
+    // For search we do a get with query parameter
+    // What's great is that all this logic we had 
+    // to write in order to search through our events 
+    // goes away because the server is going to do that
+    // for us. So, I'll comment that code out. 
     searchSessions(searchTerm: string) {
-      var term = searchTerm.toLocaleLowerCase();
+      /*var term = searchTerm.toLocaleLowerCase();
       var results: ISession[] = [];
-
       // To find the correct session we'll look through
       // each of our events and grab a list of sessions 
       // that whose names match our search term.
@@ -58,14 +94,13 @@ export class EventService {
           return session;
         });
         results = results.concat(matchingSessions);
-      });
+      }); */
 
-      // To simulate http a little bit 
-      var emitter = new EventEmitter(true);
-      setTimeout(() => {
-        emitter.emit(results);
-      }, 100);
-      return emitter;
+      return this.http.get("/api/sessions/search?search=" + searchTerm)
+        .map( (response: Response) => {
+          return response.json();
+        })
+        .catch(this.handleError);
     }
 
     private handleError(error: Response) {

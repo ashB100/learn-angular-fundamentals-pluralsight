@@ -26,10 +26,18 @@ export class CreateEventComponent {
     }
 
     saveEvent(fromValues) {
-        this.eventService.saveEvent(fromValues);
-        this.isDirty = false;  // we have an event guard that will prevent
-        // us from navigating away if isDirty is true.
-        this.route.navigate(['/events']);
+        // Call subscribe to actaully do the POST
+        // It returns an event back but I don't
+        // need to do anything with that event.
+        // I just need to navigate and set the 
+        // dirty flag to false after the call has been made
+        this.eventService.saveEvent(fromValues)
+            .subscribe(event => {
+                this.isDirty = false;  // we have an event guard that will prevent
+                // us from navigating away if isDirty is true.
+                
+                this.route.navigate(['/events']);
+            });
     }
 
     cancel() {

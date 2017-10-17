@@ -21,21 +21,28 @@ import { Router } from '@angular/router';
   `]
 })
 export class ProfileComponent implements OnInit {
-    profileForm: FormGroup;
+      profileForm: FormGroup;
       private firstName: FormControl;
       private lastName: FormControl;
 
       constructor(private authService:AuthService, private router:Router, @Inject(TOASTR_TOKEN) private toastr: Toastr) {}
       
-      ngOnInit() {
-         this.firstName = new FormControl(this.authService.currentUser.firstName, 
+      ngOnInit() {  
+        let fname = '';
+        let lname = '';
+        if (this.authService.currentUser) {
+          fname = this.authService.currentUser.firstName;
+          lname = this.authService.currentUser.lastName;
+        }
+
+        this.firstName = new FormControl(fname, 
           [Validators.required, Validators.pattern('[a-zA-Z].*')]);
-         this.lastName = new FormControl(this.authService.currentUser.lastName, Validators.required);
-         
-         this.profileForm = new FormGroup({
-           firstName: this.firstName, 
-           lastName: this.lastName
-          });
+        this.lastName = new FormControl(lname, Validators.required);  
+
+        this.profileForm = new FormGroup({
+          firstName: this.firstName, 
+          lastName: this.lastName
+        });
        }
 
        cancel() {
@@ -44,10 +51,28 @@ export class ProfileComponent implements OnInit {
 
        saveProfile(formValues) {
          if (this.profileForm.valid) {
-            this.authService.updateCurrentUser(formValues.firstName, formValues.lastName);
-            this.toastr.success('Profile saved.');
-            this.router.navigate(['events']);
+            this.authService.updateCurrentUser(formValues.firstName, formValues.lastName)
+              .subscribe(() => {
+                // we don't really care about the response here
+                this.toastr.success('Profile saved.');
+                //this.router.navigate(['events']);
+              });
          }
+      }
+
+      logout() {
+        // Here's a case where we might think logout doesn't 
+        // sound like a HTTP get or put so maybe it should
+        // be self subscribing. But we want to be able to take
+        // an action when that logout actually happens.
+        // We want to navigate the use to the login page, so
+        // we want to be able to subscribe here.
+        // So that's a good reason for making your HTTP methods
+        // that wrap over an observable not to be self-subscribing.
+        // That way you can take an action when they happen. 
+        this.authService.logout().subscribe(() => {
+          this.router.navigate(['/user/login']);
+        })
       }
 
       validateFirstName() {

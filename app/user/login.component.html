@@ -34,5 +34,11 @@
         <button type="submit" [disabled]="loginForm.invalid" class="btn btn-primary">Login</button>
     </span> 
     <button type="button" (click)="cancel()" class="btn btn-default">Cancel</button>
+
+    <br>
+
+    <div *ngIf="loginInvalid" class="alert alert-danger">
+      Invalid Login Info
+    </div>
   </form>
 </div>
