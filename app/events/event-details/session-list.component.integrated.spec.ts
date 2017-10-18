@@ -101,8 +101,15 @@ describe('', () => {
         // We use toContain() rather than toBe() because the textContent
         // may have more text than just the binding. Makes our test 
         // a less brittle. 
-        expect(element.querySelector('[well-title]').textContent)
-            .toContain('Session 1');
+        
+        /*expect(element.querySelector('[well-title]').textContent)
+            .toContain('Session 1'); */
+
+        // Using debugElement instead
+        expect(debugEl.query(By.css('[well-title]'))
+        .nativeElement
+        .textContent)
+        .toContain('Session 1');
     })
    })
 });
