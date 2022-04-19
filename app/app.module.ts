@@ -34,6 +34,8 @@ import { VoterService } from './events/event-details/voter.service';
 import { EventRouteActivator } from './events/event-details/event-route-activator.service';
 import { appRoutes } from './routes';
 
+import { AgmCoreModule } from '@agm/core';
+
 // Letting typescript know there's a global toastr object
 declare let toastr: Toastr;
 declare let jQuery: Object;

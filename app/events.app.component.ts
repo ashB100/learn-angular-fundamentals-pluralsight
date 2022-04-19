@@ -5,11 +5,14 @@ import { AuthService } from './user/auth.service';
     selector: 'events-app',
     template: `
         <nav-bar></nav-bar>
-        
+        <h2>Location</h2>
+        <p>Latitude: {{location?.coords.latitude}}, Longitude {{location?.coords.longitude}}</p>
         <router-outlet></router-outlet>
     `
 })
 export class EventsAppComponent {
+    location;
+
     constructor(private auth: AuthService) {}
 
     ngOnInit() {
@@ -22,5 +25,10 @@ export class EventsAppComponent {
         // user on the client which will then make the user logged in
         // on the server. 
         this.auth.checkAuthenticationStatus();
+
+        navigator.geolocation.getCurrentPosition((position) => {
+            this.location = position;
+            //let googlePos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+          } );
     }
 }
